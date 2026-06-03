@@ -1,14 +1,41 @@
-<h1>🛒 Shopping Cart</h1>
-<hr>
+<h1 style="text-align:center;">🛒 Shopping Cart</h1>
+<hr style="width:60%; margin:auto;">
 
-<div *ngFor="let item of items">
-  <span>{{ item.name }} - ₹{{ item.price }}</span>
-  <button (click)="decrease(item)"> - </button>
-  <span>{{ item.quantity }}</span>
-  <button (click)="increase(item)"> + </button>
-</div>
+@if (loading) {
+  <h2 style="text-align:center; margin-top:30px;">Loading products...</h2>
+}
 
-<hr>
-<h2>Total: ₹{{ total }}</h2>
-<h3>Items in cart: {{ cartCount }}</h3>
-<button (click)="clearCart()">Clear Cart</button>
+@if (errorMessage) {
+  <h2 style="text-align:center; margin-top:30px; color:red;">
+    {{ errorMessage }}
+  </h2>
+}
+
+@if (!loading && !errorMessage) {
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:20px;">
+
+    @for (item of items; track item.id) {
+      <div style="display:flex; justify-content:space-between; align-items:center;
+                  width:500px; padding:10px; border:1px solid #ccc; border-radius:8px;">
+
+        <span style="width:330px;">{{ item.name }} - ₹{{ item.price }}</span>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button (click)="decrease(item)">-</button>
+          <span>{{ item.quantity }}</span>
+          <button (click)="increase(item)">+</button>
+        </div>
+
+      </div>
+    }
+
+  </div>
+
+  <hr style="width:60%; margin:auto; margin-top:20px;">
+
+  <div style="text-align:center; margin-top:15px;">
+    <h2>Total: ₹{{ total }}</h2>
+    <h3>Items in cart: {{ cartCount }}</h3>
+    <button (click)="clearCart()">Clear Cart</button>
+  </div>
+}
