@@ -52,3 +52,7 @@ span {
     width: auto !important;
   }
 }
+
+.cart-divider {
+  margin: 28px auto 24px;
+}
