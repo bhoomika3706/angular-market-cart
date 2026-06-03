@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { DbService, CartItem } from './services/db.service';
@@ -20,7 +20,8 @@ export class App implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private dbService: DbService
+    private dbService: DbService,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -61,6 +62,7 @@ export class App implements OnInit {
       this.errorMessage = 'Products could not be loaded.';
     } finally {
       this.loading = false;
+      this.changeDetector.detectChanges();
     }
   }
 
