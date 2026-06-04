@@ -1,9 +1,15 @@
-import { ProfileComponent } from './profile/profile';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-profile',
   standalone: true,
-  imports: [ProfileComponent],
-  templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  templateUrl: './profile.html',
+  styleUrls: ['./profile.css']
 })
+export class ProfileComponent {
+  data:string="bhoomi";
+  
+  updateData(){
+    this.data="updated data";
+  }
+}

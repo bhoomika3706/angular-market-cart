@@ -2,11 +2,14 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { DbService, CartItem } from './services/db.service';
+import { ProfileComponent } from './profile/profile';
+import { PipeDemoComponent } from './pipe-demo/pipe-demo';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  templateUrl: './app.html',
+  imports: [ProfileComponent, PipeDemoComponent],
+  templateUrl: './app.html', 
   styleUrls: ['./app.css']
 })
 export class App implements OnInit {
