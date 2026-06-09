@@ -1,0 +1,17 @@
+.home-container {
+  background-color: #d9e9fe;
+  text-align: center;
+  margin-top: 40px;
+  padding: 40px;
+  border-radius: 10px;
+  margin:200px;
+  display: flex;
+flex-direction: column;
+align-items: center;
+  background: linear-gradient(135deg, #fef3c7, #f8fafc);
+}
+.home-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}

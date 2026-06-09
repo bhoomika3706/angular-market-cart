@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-home',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './profile.html',
-  styleUrls: ['./profile.css']
+  templateUrl: './home.html',
+  styleUrls: ['./home.css']
 })
-export class ProfileComponent {}
+export class HomeComponent {}

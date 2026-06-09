@@ -1,0 +1,58 @@
+<div class="cart-page">
+  <div class="cart-header">
+    <h1>Shopping Cart</h1>
+
+    <div class="nav-buttons">
+      <a routerLink="/">
+        <button class="small-btn">Home</button>
+      </a>
+
+      <a routerLink="/profile">
+        <button class="small-btn secondary-btn">Profile</button>
+      </a>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <div>
+      <p>Total Amount</p>
+      <h2>₹{{ total }}</h2>
+    </div>
+
+    <div>
+      <p>Items in Cart</p>
+      <h2>{{ cartCount }}</h2>
+    </div>
+
+    <button class="clear-btn" (click)="clearCart()">Clear Cart</button>
+  </div>
+
+  @if (loading) {
+    <h2 class="message">Loading products...</h2>
+  }
+
+  @if (errorMessage) {
+    <h2 class="message error">
+      {{ errorMessage }}
+    </h2>
+  }
+
+  @if (!loading && !errorMessage) {
+    <div class="product-list">
+      @for (item of items; track item.id) {
+        <div class="product-card">
+          <div class="product-details">
+            <p>{{ item.name }}</p>
+            <p><strong>₹{{ item.price }}</strong></p>
+          </div>
+
+          <div class="quantity-controls">
+            <button (click)="decrease(item)">-</button>
+            <span>{{ item.quantity }}</span>
+            <button (click)="increase(item)">+</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,10 +1,40 @@
-h2 {
-  font-family: Arial, sans-serif;
-  color: #222;
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #fef3c7, #f8fafc);
 }
 
-p {
-  margin: 8px 0;
-  font-family: Arial, sans-serif;
-  color: #333;
+.profile-card {
+  width: 360px;
+  padding: 35px 30px;
+  text-align: center;
+  background-color: white;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.profile-card h1 {
+  margin-bottom: 20px;
+  color: #0f172a;
+}
+
+.profile-info {
+  margin-bottom: 25px;
+  color: #475569;
 }

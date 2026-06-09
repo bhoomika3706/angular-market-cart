@@ -27,8 +27,8 @@ export class DbService {
         resolve();
       };
 
-      request.onupgradeneeded = (event: any) => {
-        const db = event.target.result as IDBDatabase;
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+        const db = (event.target as IDBOpenDBRequest).result;
 
         if (!db.objectStoreNames.contains(this.productStore)) {
           db.createObjectStore(this.productStore, { keyPath: 'id' });
