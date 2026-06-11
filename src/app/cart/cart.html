@@ -10,13 +10,23 @@
 
   <div class="summary-card">
     <div>
-      <p>Total Amount</p>
-      <h2>₹{{ total }}</h2>
+      <p>Items</p>
+      <h2>{{ cartCount }}</h2>
     </div>
 
     <div>
-      <p>Items in Cart</p>
-      <h2>{{ cartCount }}</h2>
+      <p>Subtotal</p>
+      <h2>₹{{ subtotal }}</h2>
+    </div>
+
+    <div>
+      <p>Tax</p>
+      <h2>₹{{ tax }}</h2>
+    </div>
+
+    <div>
+      <p>Total</p>
+      <h2>₹{{ total }}</h2>
     </div>
 
     <button class="clear-btn" (click)="clearCart()">Clear Cart</button>

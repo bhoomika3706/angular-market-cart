@@ -22,7 +22,14 @@
   </div>
 
   <div class="home-buttons">
-    <a routerLink="/cart">Go to Cart</a>
+    <a routerLink="/cart" class="cart-link">
+      Go to Cart
+
+      @if (cartCount > 0) {
+        <span class="cart-badge">{{ cartCount }}</span>
+      }
+    </a>
+
     <a routerLink="/profile">Go to Profile</a>
   </div>
 
@@ -52,16 +59,43 @@
         <option [value]="price">{{ price }}</option>
       }
     </select>
+
+    <select [(ngModel)]="selectedSort">
+      @for (sort of sortOptions; track sort) {
+        <option [value]="sort">{{ sort }}</option>
+      }
+    </select>
   </div>
 
   @if (loading) {
-    <h2>Loading products...</h2>
+    <div class="product-grid">
+      @for (skeleton of [1, 2, 3, 4, 5, 6, 7, 8]; track skeleton) {
+        <div class="product-card skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-button"></div>
+        </div>
+      }
+    </div>
   }
 
-  @if (!loading) {
+  @if (!loading && filteredItems.length === 0) {
+    <div class="empty-state">
+      <h2>No products found 🔍</h2>
+      <p>Try changing filters or search terms.</p>
+    </div>
+  }
+
+  @if (!loading && filteredItems.length > 0) {
     <div class="product-grid">
       @for (item of filteredItems; track item.id) {
         <div class="product-card">
+          <button class="favorite-btn" (click)="toggleFavorite(item)">
+            {{ item.isFavorite ? '♥' : '♡' }}
+          </button>
+
           <img [src]="item.image" alt="product image" />
 
           <h3>{{ item.name }}</h3>
@@ -81,9 +115,19 @@
               Info
             </button>
 
-            <button class="cart-btn" (click)="addToCart(item)">
-              Add to Cart
-            </button>
+            @if (item.quantity === 0) {
+              <button class="cart-btn" (click)="addToCart(item)">
+                Add to Cart
+              </button>
+            }
+
+            @if (item.quantity > 0) {
+              <div class="quantity-selector">
+                <button (click)="decreaseFromCart(item)">-</button>
+                <span>{{ item.quantity }}</span>
+                <button (click)="addToCart(item)">+</button>
+              </div>
+            }
           </div>
         </div>
       }

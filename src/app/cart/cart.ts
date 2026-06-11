@@ -13,6 +13,8 @@ import { DbService, CartItem } from '../services/db.service';
 })
 export class CartComponent implements OnInit {
   items: CartItem[] = [];
+  subtotal = 0;
+  tax = 0;
   total = 0;
   cartCount = 0;
   loading = true;
@@ -54,7 +56,10 @@ export class CartComponent implements OnInit {
           image: product.image,
           description: product.description,
           rating: product.rating?.rate || 0,
-          color: this.getColorByCategory(product.category)
+          color: '',
+          sizes: [],
+          stock: 1000,
+          isFavorite: false
         }));
 
         await this.dbService.saveProducts(this.items);
@@ -69,14 +74,6 @@ export class CartComponent implements OnInit {
       this.loading = false;
       this.changeDetector.detectChanges();
     }
-  }
-
-  getColorByCategory(category: string): string {
-    if (category === "men's clothing") return 'Blue';
-    if (category === "women's clothing") return 'Pink';
-    if (category === 'jewelery') return 'Gold';
-    if (category === 'electronics') return 'Black';
-    return 'Neutral';
   }
 
   get cartItems(): CartItem[] {
@@ -104,12 +101,15 @@ export class CartComponent implements OnInit {
   }
 
   recalculateTotals(): void {
-    this.total = 0;
+    this.subtotal = 0;
     this.cartCount = 0;
 
     this.items.forEach(item => {
-      this.total += item.price * item.quantity;
+      this.subtotal += item.price * item.quantity;
       this.cartCount += item.quantity;
     });
+
+    this.tax = Math.round(this.subtotal * 0.05);
+    this.total = this.subtotal + this.tax;
   }
 }

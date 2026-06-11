@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DbService, CartItem } from '../services/db.service';
@@ -11,11 +11,15 @@ import { DbService, CartItem } from '../services/db.service';
   styleUrls: ['./home.css']
 })
 export class HomeComponent implements OnInit {
+  private dbService = inject(DbService);
+  private changeDetector = inject(ChangeDetectorRef);
+
   items: CartItem[] = [];
   searchText = '';
   selectedCategory = 'All Categories';
   selectedColor = 'All Colors';
   selectedPrice = 'All Prices';
+  selectedSort = 'Sort By';
   darkMode = false;
   loading = true;
   selectedItem: CartItem | null = null;
@@ -28,10 +32,13 @@ export class HomeComponent implements OnInit {
     'Above ₹100'
   ];
 
-  constructor(
-    private dbService: DbService,
-    private changeDetector: ChangeDetectorRef
-  ) {}
+  sortOptions: string[] = [
+    'Sort By',
+    'Price Low to High',
+    'Price High to Low',
+    'Rating High to Low',
+    'Name A to Z'
+  ];
 
   async ngOnInit(): Promise<void> {
     await this.dbService.initDB();
@@ -43,7 +50,8 @@ export class HomeComponent implements OnInit {
       color: this.getProductColor(item),
       sizes: this.getAvailableSizes(item.category),
       stock: 1000,
-      description: this.getProductDescription(item)
+      description: this.getProductDescription(item),
+      isFavorite: item.isFavorite || false
     }));
 
     await this.dbService.saveProducts(this.items);
@@ -64,8 +72,12 @@ export class HomeComponent implements OnInit {
     return ['All Colors', 'Black', 'Blue', 'Gold', 'Silver', 'White', 'Brown'];
   }
 
+  get cartCount(): number {
+    return this.items.reduce((count, item) => count + item.quantity, 0);
+  }
+
   get filteredItems(): CartItem[] {
-    return this.items.filter(item => {
+    let result = this.items.filter(item => {
       const matchesSearch = item.name
         .toLowerCase()
         .includes(this.searchText.toLowerCase());
@@ -88,50 +100,40 @@ export class HomeComponent implements OnInit {
 
       return matchesSearch && matchesCategory && matchesColor && matchesPrice;
     });
+
+    if (this.selectedSort === 'Price Low to High') {
+      result = [...result].sort((a, b) => a.price - b.price);
+    }
+
+    if (this.selectedSort === 'Price High to Low') {
+      result = [...result].sort((a, b) => b.price - a.price);
+    }
+
+    if (this.selectedSort === 'Rating High to Low') {
+      result = [...result].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    }
+
+    if (this.selectedSort === 'Name A to Z') {
+      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    return result;
   }
 
   getProductColor(item: CartItem): string {
     const name = item.name.toLowerCase();
 
-    if (name.includes('black') || name.includes('mens casual premium')) {
-      return 'Black';
-    }
+    if (name.includes('black') || name.includes('premium')) return 'Black';
+    if (name.includes('blue') || name.includes('backpack') || name.includes('slim fit')) return 'Blue';
+    if (name.includes('gold')) return 'Gold';
+    if (name.includes('silver') || name.includes('ssd')) return 'Silver';
+    if (name.includes('white')) return 'White';
+    if (name.includes('brown') || name.includes('jacket')) return 'Brown';
 
-    if (name.includes('blue') || name.includes('backpack') || name.includes('slim fit')) {
-      return 'Blue';
-    }
-
-    if (name.includes('gold')) {
-      return 'Gold';
-    }
-
-    if (name.includes('silver') || name.includes('ssd')) {
-      return 'Silver';
-    }
-
-    if (name.includes('white')) {
-      return 'White';
-    }
-
-    if (name.includes('brown') || name.includes('jacket')) {
-      return 'Brown';
-    }
-
-    if (item.category === 'electronics') {
-      return 'Black';
-    }
-
-    if (item.category === 'jewelery') {
-      return 'Gold';
-    }
-
-    if (item.category === "men's clothing") {
-      return 'Blue';
-    }
-
-    if (item.category === "women's clothing") {
-      return 'White';
-    }
+    if (item.category === 'electronics') return 'Black';
+    if (item.category === 'jewelery') return 'Gold';
+    if (item.category === "men's clothing") return 'Blue';
+    if (item.category === "women's clothing") return 'White';
 
     return 'Black';
   }
@@ -175,17 +177,11 @@ export class HomeComponent implements OnInit {
       return 'A clear display monitor suitable for study, work, gaming, and entertainment, offering a comfortable viewing experience for daily use.';
     }
 
-    if (name.includes('women')) {
-      return 'A stylish women’s product with a clean look and comfortable feel, suitable for casual use, outings, and everyday styling.';
-    }
-
     return 'A practical and stylish product selected for everyday shopping, offering useful design, good value, and reliable performance for regular use.';
   }
 
   formatCategory(category: string): string {
-    if (category === 'jewelery') {
-      return 'Jewelry';
-    }
+    if (category === 'jewelery') return 'Jewelry';
 
     return category
       .split(' ')
@@ -204,6 +200,18 @@ export class HomeComponent implements OnInit {
       this.addedMessage = '';
       this.changeDetector.detectChanges();
     }, 1800);
+  }
+
+  async decreaseFromCart(item: CartItem): Promise<void> {
+    if (item.quantity > 0) {
+      item.quantity--;
+      await this.dbService.saveProducts(this.items);
+    }
+  }
+
+  async toggleFavorite(item: CartItem): Promise<void> {
+    item.isFavorite = !item.isFavorite;
+    await this.dbService.saveProducts(this.items);
   }
 
   openProductInfo(item: CartItem): void {

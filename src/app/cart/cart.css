@@ -136,3 +136,18 @@
     grid-template-columns: 1fr;
   }
 }
+.summary-card {
+  grid-template-columns: repeat(4, 1fr) auto;
+}
+
+@media (max-width: 900px) {
+  .summary-card {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .summary-card {
+    grid-template-columns: 1fr;
+  }
+}
