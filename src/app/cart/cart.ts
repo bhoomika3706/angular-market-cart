@@ -32,15 +32,16 @@ export class CartComponent implements OnInit {
 
       const savedProducts = await this.dbService.getProducts();
       const lastFetchTime = await this.dbService.getLastFetchTime();
-
       const now = Date.now();
+
       const hasProducts = savedProducts.length > 0;
-      const cacheIsFresh = lastFetchTime !== null && now - lastFetchTime < this.fourHours;
+      const cacheIsFresh =
+        lastFetchTime !== null && now - lastFetchTime < this.fourHours;
 
       if (hasProducts && cacheIsFresh) {
         this.items = savedProducts;
       } else {
-        const apiProducts = await firstValueFrom(
+        const apiProducts: any[] = await firstValueFrom(
           this.http.get<any[]>('https://fakestoreapi.com/products')
         );
 
@@ -48,7 +49,12 @@ export class CartComponent implements OnInit {
           id: product.id,
           name: product.title,
           price: Math.round(product.price),
-          quantity: 0
+          quantity: 0,
+          category: product.category,
+          image: product.image,
+          description: product.description,
+          rating: product.rating?.rate || 0,
+          color: this.getColorByCategory(product.category)
         }));
 
         await this.dbService.saveProducts(this.items);
@@ -63,6 +69,18 @@ export class CartComponent implements OnInit {
       this.loading = false;
       this.changeDetector.detectChanges();
     }
+  }
+
+  getColorByCategory(category: string): string {
+    if (category === "men's clothing") return 'Blue';
+    if (category === "women's clothing") return 'Pink';
+    if (category === 'jewelery') return 'Gold';
+    if (category === 'electronics') return 'Black';
+    return 'Neutral';
+  }
+
+  get cartItems(): CartItem[] {
+    return this.items.filter(item => item.quantity > 0);
   }
 
   async increase(item: CartItem): Promise<void> {
@@ -80,7 +98,7 @@ export class CartComponent implements OnInit {
   }
 
   async clearCart(): Promise<void> {
-    this.items.forEach(item => item.quantity = 0);
+    this.items.forEach(item => (item.quantity = 0));
     this.recalculateTotals();
     await this.dbService.saveProducts(this.items);
   }

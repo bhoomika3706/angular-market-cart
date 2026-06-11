@@ -3,13 +3,8 @@
     <h1>Shopping Cart</h1>
 
     <div class="nav-buttons">
-      <a routerLink="/">
-        <button class="small-btn">Home</button>
-      </a>
-
-      <a routerLink="/profile">
-        <button class="small-btn secondary-btn">Profile</button>
-      </a>
+      <a routerLink="/" class="small-btn">Home</a>
+      <a routerLink="/profile" class="small-btn">Profile</a>
     </div>
   </div>
 
@@ -32,18 +27,20 @@
   }
 
   @if (errorMessage) {
-    <h2 class="message error">
-      {{ errorMessage }}
-    </h2>
+    <h2 class="message error">{{ errorMessage }}</h2>
   }
 
   @if (!loading && !errorMessage) {
+    @if (cartItems.length === 0) {
+      <h2 class="message">Your cart is empty.</h2>
+    }
+
     <div class="product-list">
-      @for (item of items; track item.id) {
+      @for (item of cartItems; track item.id) {
         <div class="product-card">
           <div class="product-details">
-            <p>{{ item.name }}</p>
-            <p><strong>₹{{ item.price }}</strong></p>
+            <h3>{{ item.name }}</h3>
+            <p>₹{{ item.price }}</p>
           </div>
 
           <div class="quantity-controls">
