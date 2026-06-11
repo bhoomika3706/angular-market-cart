@@ -1,4 +1,10 @@
 <div class="home-container" [class.dark-mode]="darkMode">
+  @if (addedMessage) {
+    <div class="toast-message">
+      ✓ {{ addedMessage }}
+    </div>
+  }
+
   <div class="top-bar">
     <div class="brand">
       <svg class="cart-logo" viewBox="0 0 24 24">
@@ -98,8 +104,25 @@
         </p>
 
         <p class="popup-description">
-          {{ getShortDescription(selectedItem.description) }}
+          {{ selectedItem.description }}
         </p>
+
+        <div class="popup-extra-info">
+          <p>
+            <strong>Sizes:</strong>
+            {{ selectedItem.sizes?.join(', ') }}
+          </p>
+
+          <p>
+            <strong>Stock:</strong>
+            {{ selectedItem.stock }} items available
+          </p>
+
+          <p>
+            <strong>Color:</strong>
+            {{ selectedItem.color }}
+          </p>
+        </div>
 
         <p class="popup-price">₹{{ selectedItem.price }}</p>
 

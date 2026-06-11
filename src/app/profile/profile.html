@@ -1,16 +1,35 @@
-<div class="page profile-page">
+<div class="profile-page">
   <div class="profile-card">
-    <div class="avatar">B</div>
+    <div class="profile-header">
+      <div class="avatar">B</div>
 
-    <h1>Profile</h1>
-
-    <div class="profile-info">
-      <p><strong>Name:</strong> Bhoomika</p>
-      <p><strong>Project:</strong> MarketCart</p>
+      <div>
+        <p class="small-title">User Profile</p>
+        <h1>Bhoomika</h1>
+      </div>
     </div>
 
-    <a routerLink="/">
-      <button>Back Home</button>
-    </a>
+    <div class="profile-info">
+      <div class="info-box">
+        <span>Name</span>
+        <h3>Bhoomika</h3>
+      </div>
+
+      <div class="info-box">
+        <span>Project</span>
+        <h3>MarketCart</h3>
+      </div>
+
+      <div class="info-box full">
+        <span>About Project</span>
+        <p>
+          MarketCart is a simple shopping cart app built with Angular. It allows
+          users to browse products, filter categories, search items, view product
+          details, and add selected products to the cart.
+        </p>
+      </div>
+    </div>
+
+    <a routerLink="/" class="back-btn">Back Home</a>
   </div>
 </div>
