@@ -44,7 +44,7 @@ export class CartComponent implements OnInit {
         this.items = savedProducts;
       } else {
         const apiProducts: any[] = await firstValueFrom(
-          this.http.get<any[]>('https://fakestoreapi.com/products')
+          this.http.get<any[]>('http://localhost:3000/products')
         );
 
         this.items = apiProducts.map(product => ({
@@ -56,9 +56,9 @@ export class CartComponent implements OnInit {
           image: product.image,
           description: product.description,
           rating: product.rating?.rate || 0,
-          color: '',
-          sizes: [],
-          stock: 1000,
+          color: product.color,
+          sizes: product.sizes,
+          stock: product.stock,
           isFavorite: false
         }));
 
