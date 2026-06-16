@@ -96,7 +96,11 @@
             {{ item.isFavorite ? '♥' : '♡' }}
           </button>
 
-          <img [src]="item.image" alt="product image" />
+          <img
+            [src]="item.image"
+            alt="product image"
+            (error)="onImageError($event)"
+          />
 
           <h3>{{ item.name }}</h3>
 
@@ -139,7 +143,11 @@
       <div class="popup-card" (click)="$event.stopPropagation()">
         <button class="close-btn" (click)="closeProductInfo()">×</button>
 
-        <img [src]="selectedItem.image" alt="product image" />
+        <img
+          [src]="selectedItem.image"
+          alt="product image"
+          (error)="onImageError($event)"
+        />
 
         <h2>{{ selectedItem.name }}</h2>
 
