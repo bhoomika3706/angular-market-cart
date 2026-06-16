@@ -38,7 +38,7 @@ db.serialize(() => {
       "Men's Casual Cotton T-Shirt",
       499,
       "men's clothing",
-      "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
+      "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY_.jpg",
       "A soft cotton casual T-shirt designed for daily comfort, college wear, outings and relaxed styling with a clean modern fit.",
       "Blue",
       "S,M,L,XL",

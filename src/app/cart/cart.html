@@ -48,6 +48,8 @@
     <div class="product-list">
       @for (item of cartItems; track item.id) {
         <div class="product-card">
+          <img [src]="item.image" alt="product image" />
+
           <div class="product-details">
             <h3>{{ item.name }}</h3>
             <p>₹{{ item.price }}</p>

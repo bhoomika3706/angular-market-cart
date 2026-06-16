@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
 import { DbService, CartItem } from '../services/db.service';
+import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-cart',
@@ -20,52 +19,15 @@ export class CartComponent implements OnInit {
   loading = true;
   errorMessage = '';
 
-  private fourHours = 4 * 60 * 60 * 1000;
-
   constructor(
-    private http: HttpClient,
     private dbService: DbService,
+    private productService: ProductService,
     private changeDetector: ChangeDetectorRef
   ) {}
 
   async ngOnInit(): Promise<void> {
     try {
-      await this.dbService.initDB();
-
-      const savedProducts = await this.dbService.getProducts();
-      const lastFetchTime = await this.dbService.getLastFetchTime();
-      const now = Date.now();
-
-      const hasProducts = savedProducts.length > 0;
-      const cacheIsFresh =
-        lastFetchTime !== null && now - lastFetchTime < this.fourHours;
-
-      if (hasProducts && cacheIsFresh) {
-        this.items = savedProducts;
-      } else {
-        const apiProducts: any[] = await firstValueFrom(
-          this.http.get<any[]>('http://localhost:3000/products')
-        );
-
-        this.items = apiProducts.map(product => ({
-          id: product.id,
-          name: product.title,
-          price: Math.round(product.price),
-          quantity: 0,
-          category: product.category,
-          image: product.image,
-          description: product.description,
-          rating: product.rating?.rate || 0,
-          color: product.color,
-          sizes: product.sizes,
-          stock: product.stock,
-          isFavorite: false
-        }));
-
-        await this.dbService.saveProducts(this.items);
-        await this.dbService.saveLastFetchTime(now);
-      }
-
+      this.items = await this.productService.loadProducts();
       this.recalculateTotals();
     } catch (error) {
       console.error(error);

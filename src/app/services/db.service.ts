@@ -26,7 +26,7 @@ export class DbService {
 
   initDB(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 6);
+      const request = indexedDB.open(this.dbName, 7);
 
       request.onerror = () => reject('Database failed to open');
 
