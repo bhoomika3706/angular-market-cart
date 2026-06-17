@@ -40,17 +40,17 @@
     <h2 class="message error">{{ errorMessage }}</h2>
   }
 
-  @if (!loading && !errorMessage) {
-    @if (cartItems.length === 0) {
-      <h2 class="message">Your cart is empty.</h2>
-    }
+  @if (!loading && !errorMessage && cartItems.length === 0) {
+    <h2 class="message">Your cart is empty.</h2>
+  }
 
+  @if (!loading && !errorMessage && cartItems.length > 0) {
     <div class="product-list">
       @for (item of cartItems; track item.id) {
-        <div class="product-card">
+        <div class="cart-item">
           <img [src]="item.image" alt="product image" />
 
-          <div class="product-details">
+          <div class="cart-details">
             <h3>{{ item.name }}</h3>
             <p>₹{{ item.price }}</p>
           </div>

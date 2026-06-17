@@ -28,14 +28,9 @@ export class HomeComponent implements OnInit {
   selectedItem: CartItem | null = null;
   addedMessage = '';
 
-  priceRanges: string[] = [
-    'All Prices',
-    'Under ₹500',
-    '₹500 - ₹1500',
-    'Above ₹1500'
-  ];
+  priceRanges = ['All Prices', 'Under ₹500', '₹500 - ₹1500', 'Above ₹1500'];
 
-  sortOptions: string[] = [
+  sortOptions = [
     'Sort By',
     'Price Low to High',
     'Price High to Low',
@@ -45,7 +40,16 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      this.items = await this.productService.loadProducts();
+      const backendProducts = await this.productService.loadProducts();
+
+      this.items = backendProducts.map(item => ({
+        ...item,
+        color: this.normalizeColor(item.color, item.name, item.category),
+        quantity: item.quantity || 0,
+        isFavorite: item.isFavorite || false
+      }));
+
+      await this.dbService.saveProducts(this.items);
     } catch (error) {
       console.error('Products could not be loaded:', error);
     } finally {
@@ -63,11 +67,7 @@ export class HomeComponent implements OnInit {
   }
 
   get colors(): string[] {
-    const colorList = this.items
-      .map(item => item.color)
-      .filter((color): color is string => !!color);
-
-    return ['All Colors', ...new Set(colorList)];
+    return ['All Colors', 'Black', 'Blue', 'Brown', 'Gold', 'Silver', 'White'];
   }
 
   get cartCount(): number {
@@ -76,6 +76,8 @@ export class HomeComponent implements OnInit {
 
   get filteredItems(): CartItem[] {
     let result = this.items.filter(item => {
+      const itemColor = this.normalizeColor(item.color, item.name, item.category);
+
       const matchesSearch = item.name
         .toLowerCase()
         .includes(this.searchText.toLowerCase());
@@ -86,7 +88,7 @@ export class HomeComponent implements OnInit {
 
       const matchesColor =
         this.selectedColor === 'All Colors' ||
-        item.color === this.selectedColor;
+        itemColor === this.selectedColor;
 
       const matchesPrice =
         this.selectedPrice === 'All Prices' ||
@@ -116,6 +118,34 @@ export class HomeComponent implements OnInit {
     }
 
     return result;
+  }
+
+  normalizeColor(color?: string, name?: string, category?: string): string {
+    const productColor = (color || '').toLowerCase();
+    const productName = (name || '').toLowerCase();
+    const productCategory = (category || '').toLowerCase();
+
+    if (productColor.includes('black')) return 'Black';
+    if (productColor.includes('blue')) return 'Blue';
+    if (productColor.includes('brown')) return 'Brown';
+    if (productColor.includes('gold')) return 'Gold';
+    if (productColor.includes('silver')) return 'Silver';
+    if (productColor.includes('white')) return 'White';
+
+    if (productName.includes('backpack')) return 'Blue';
+    if (productName.includes('premium') || productName.includes('slim')) return 'Black';
+    if (productName.includes('jacket')) return 'Brown';
+    if (productName.includes('bracelet')) return 'Gold';
+    if (productName.includes('ring')) return 'Silver';
+    if (productName.includes('drive') || productName.includes('ssd')) return 'Black';
+    if (productName.includes('monitor')) return 'Black';
+
+    if (productCategory === 'jewelery') return 'Gold';
+    if (productCategory === 'electronics') return 'Black';
+    if (productCategory === "men's clothing") return 'Blue';
+    if (productCategory === "women's clothing") return 'White';
+
+    return 'Black';
   }
 
   formatCategory(category: string): string {

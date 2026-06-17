@@ -24,7 +24,6 @@
   <div class="home-buttons">
     <a routerLink="/cart" class="cart-link">
       Go to Cart
-
       @if (cartCount > 0) {
         <span class="cart-badge">{{ cartCount }}</span>
       }
@@ -102,19 +101,15 @@
             (error)="onImageError($event)"
           />
 
+          <h3>{{ item.name }}</h3>
+
+          <p class="rating">⭐ {{ item.rating || 0 }} / 5</p>
+
           <p class="category">
             {{ formatCategory(item.category || '') }}
           </p>
 
-          <h3>{{ item.name }}</h3>
-
-          <div class="price-rating-row">
-            <p class="price">₹{{ item.price }}</p>
-
-            <p class="rating">
-              ⭐ {{ item.rating || 0 }}
-            </p>
-          </div>
+          <p class="price">₹{{ item.price }}</p>
 
           <div class="card-actions">
             <button class="info-btn" (click)="openProductInfo(item)">
@@ -153,29 +148,16 @@
 
         <h2>{{ selectedItem.name }}</h2>
 
-        <p class="popup-rating">
-          ⭐ {{ selectedItem.rating || 0 }} / 5
-        </p>
+        <p class="popup-rating">⭐ {{ selectedItem.rating || 0 }} / 5</p>
 
         <p class="popup-description">
           {{ selectedItem.description }}
         </p>
 
         <div class="popup-extra-info">
-          <p>
-            <strong>Sizes:</strong>
-            {{ selectedItem.sizes?.join(', ') }}
-          </p>
-
-          <p>
-            <strong>Stock:</strong>
-            {{ selectedItem.stock }} items available
-          </p>
-
-          <p>
-            <strong>Color:</strong>
-            {{ selectedItem.color }}
-          </p>
+          <p><strong>Sizes:</strong> {{ selectedItem.sizes?.join(', ') }}</p>
+          <p><strong>Stock:</strong> {{ selectedItem.stock }} items available</p>
+          <p><strong>Color:</strong> {{ selectedItem.color }}</p>
         </div>
 
         <p class="popup-price">₹{{ selectedItem.price }}</p>
