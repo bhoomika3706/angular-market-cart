@@ -26,7 +26,7 @@ export class DbService {
 
   initDB(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 7);
+      const request = indexedDB.open(this.dbName,6);
 
       request.onerror = () => reject('Database failed to open');
 
@@ -35,8 +35,8 @@ export class DbService {
         resolve();
       };
 
-      request.onupgradeneeded = () => {
-        const db = request.result;
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+        const db = (event.target as IDBOpenDBRequest).result;
 
         if (!db.objectStoreNames.contains(this.productStore)) {
           db.createObjectStore(this.productStore, { keyPath: 'id' });
@@ -55,7 +55,10 @@ export class DbService {
       const store = transaction.objectStore(this.productStore);
 
       store.clear();
-      products.forEach(product => store.put(product));
+
+      products.forEach(product => {
+        store.put(product);
+      });
 
       transaction.oncomplete = () => resolve();
       transaction.onerror = () => reject('Products failed to save');
@@ -78,7 +81,10 @@ export class DbService {
       const transaction = this.db.transaction(this.metaStore, 'readwrite');
       const store = transaction.objectStore(this.metaStore);
 
-      store.put({ key: 'lastFetchTime', value: time });
+      store.put({
+        key: 'lastFetchTime',
+        value: time
+      });
 
       transaction.oncomplete = () => resolve();
       transaction.onerror = () => reject('Fetch time failed to save');
