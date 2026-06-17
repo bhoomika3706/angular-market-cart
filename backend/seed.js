@@ -1,40 +1,70 @@
-const fs = require('fs');
-const path = require('path');
 const db = require('./database');
 
-function seedProducts() {
-  const filePath = path.join(__dirname, 'products.json');
-  const rawData = fs.readFileSync(filePath, 'utf-8');
-  const myProducts = JSON.parse(rawData);
+const rupeePrices = [
+  999, 499, 1499, 799, 2999,
+  1299, 699, 899, 2499, 1599,
+  399, 599, 1199, 1899, 999,
+  3499, 2199, 749, 1399, 1799
+];
 
-  db.serialize(() => {
-    db.run('DELETE FROM products');
-    db.run("DELETE FROM sqlite_sequence WHERE name='products'"); // reset id counter
+const colors = [
+  'Black', 'Blue', 'Brown', 'White', 'Gold',
+  'Silver', 'Green', 'Red', 'Yellow', 'Pink',
+  'Grey', 'Navy', 'Purple', 'Orange', 'Beige',
+  'Maroon', 'Cream', 'Teal', 'Olive', 'Rose'
+];
 
-    const query = `
-      INSERT INTO products
-      (title, price, category, image, description, rating, color, sizes, stock)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+async function seedProducts() {
+  try {
+    const response = await fetch('https://fakestoreapi.com/products');
+    const apiProducts = await response.json();
 
-    myProducts.forEach(product => {
-      db.run(query, [
-        product.title,
-        product.price,
-        product.category,
-        product.image,
-        product.description,
-        product.rating || 0,
-        product.color || 'Default',
-        product.sizes || 'S,M,L',
-        product.stock ?? 20
-      ]);
+    db.serialize(() => {
+      db.run('DELETE FROM products', (deleteError) => {
+        if (deleteError) {
+          console.error('Delete failed:', deleteError.message);
+          db.close();
+          return;
+        }
+
+        const query = `
+          INSERT INTO products
+          (id, title, price, category, image, description, rating, color, sizes, stock)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const statement = db.prepare(query);
+
+        apiProducts.forEach((product, index) => {
+          statement.run([
+            product.id,
+            product.title,
+            rupeePrices[index],
+            product.category,
+            product.image,
+            product.description,
+            product.rating?.rate || 0,
+            colors[index],
+            'S,M,L,XL',
+            20 + index
+          ]);
+        });
+
+        statement.finalize((finalizeError) => {
+          if (finalizeError) {
+            console.error('Insert failed:', finalizeError.message);
+          } else {
+            console.log(`${apiProducts.length} products inserted successfully`);
+          }
+
+          db.close();
+        });
+      });
     });
-
-    console.log(`${myProducts.length} products inserted from products.json`);
-  });
-
-  setTimeout(() => db.close(), 1000);
+  } catch (error) {
+    console.error('Seeding failed:', error);
+    db.close();
+  }
 }
 
 seedProducts();

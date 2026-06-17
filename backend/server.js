@@ -5,19 +5,15 @@ const db = require('./database');
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:4200'
+}));
 
-// Handy sanity check: open http://localhost:3000 in a browser tab.
-// If this doesn't load, the backend isn't running — that's step 1 of debugging.
-app.get('/', (req, res) => {
-  res.send('MarketCart Backend is running ✅');
-});
+app.use(express.json());
 
 app.get('/products', (req, res) => {
   db.all('SELECT * FROM products', [], (error, rows) => {
     if (error) {
-      console.error('GET /products failed:', error.message);
       res.status(500).json({ error: error.message });
       return;
     }
@@ -27,15 +23,12 @@ app.get('/products', (req, res) => {
       sizes: product.sizes ? product.sizes.split(',') : []
     }));
 
-    console.log(`Sent ${products.length} products`);
     res.json(products);
   });
 });
 
 app.get('/products/:id', (req, res) => {
-  const id = req.params.id;
-
-  db.get('SELECT * FROM products WHERE id = ?', [id], (error, product) => {
+  db.get('SELECT * FROM products WHERE id = ?', [req.params.id], (error, product) => {
     if (error) {
       res.status(500).json({ error: error.message });
       return;
@@ -47,10 +40,11 @@ app.get('/products/:id', (req, res) => {
     }
 
     product.sizes = product.sizes ? product.sizes.split(',') : [];
+
     res.json(product);
   });
 });
 
 app.listen(PORT, () => {
   console.log(`Backend running at http://localhost:${PORT}`);
-});
+}); 
