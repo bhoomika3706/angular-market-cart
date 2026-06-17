@@ -8,16 +8,27 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('MarketCart Backend is running');
+});
+
 app.get('/products', (req, res) => {
-  db.all('SELECT * FROM products', [], (error, rows) => {
+  db.all('SELECT * FROM products ORDER BY id ASC', [], (error, rows) => {
     if (error) {
-      res.status(500).json({ error: error.message });
-      return;
+      return res.status(500).json({ error: error.message });
     }
 
     const products = rows.map(product => ({
-      ...product,
-      sizes: product.sizes ? product.sizes.split(',') : []
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      category: product.category,
+      image: product.image,
+      description: product.description,
+      rating: product.rating,
+      color: product.color,
+      sizes: product.sizes ? product.sizes.split(',') : [],
+      stock: product.stock
     }));
 
     res.json(products);
@@ -25,21 +36,29 @@ app.get('/products', (req, res) => {
 });
 
 app.get('/products/:id', (req, res) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
 
   db.get('SELECT * FROM products WHERE id = ?', [id], (error, product) => {
     if (error) {
-      res.status(500).json({ error: error.message });
-      return;
+      return res.status(500).json({ error: error.message });
     }
 
     if (!product) {
-      res.status(404).json({ message: 'Product not found' });
-      return;
+      return res.status(404).json({ message: 'Product not found' });
     }
 
-    product.sizes = product.sizes ? product.sizes.split(',') : [];
-    res.json(product);
+    res.json({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      category: product.category,
+      image: product.image,
+      description: product.description,
+      rating: product.rating,
+      color: product.color,
+      sizes: product.sizes ? product.sizes.split(',') : [],
+      stock: product.stock
+    });
   });
 });
 

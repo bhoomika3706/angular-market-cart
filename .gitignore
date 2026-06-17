@@ -48,3 +48,5 @@ dist/
 .vscode/
 .DS_Store
 backend/*.db
+backend/node_modules/
+backend/marketcart.db

@@ -6,36 +6,49 @@ async function seedProducts() {
     const apiProducts = await response.json();
 
     db.serialize(() => {
-      db.run('DELETE FROM products');
+      db.run('DELETE FROM products', (deleteError) => {
+        if (deleteError) {
+          console.error('Delete failed:', deleteError.message);
+          return;
+        }
 
-      const query = `
-        INSERT INTO products
-        (title, price, category, image, description, rating, color, sizes, stock)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
+        const query = `
+          INSERT INTO products
+          (id, title, price, category, image, description, rating, color, sizes, stock)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
-      apiProducts.forEach(product => {
-        db.run(query, [
-          product.title,
-          Math.round(product.price),
-          product.category,
-          product.image,
-          product.description,
-          product.rating?.rate || 0,
-          'Default',
-          'S,M,L',
-          20
-        ]);
+        const statement = db.prepare(query);
+
+        apiProducts.forEach(product => {
+          statement.run([
+            product.id,
+            product.title,
+            Math.round(product.price),
+            product.category,
+            product.image,
+            product.description,
+            product.rating?.rate || 0,
+            'Default',
+            'S,M,L',
+            20
+          ]);
+        });
+
+        statement.finalize((finalizeError) => {
+          if (finalizeError) {
+            console.error('Insert failed:', finalizeError.message);
+          } else {
+            console.log(`${apiProducts.length} products inserted successfully`);
+          }
+
+          db.close();
+        });
       });
-
-      console.log(`${apiProducts.length} products inserted successfully`);
     });
   } catch (error) {
     console.error('Seeding failed:', error);
-  } finally {
-    setTimeout(() => {
-      db.close();
-    }, 1000);
+    db.close();
   }
 }
 

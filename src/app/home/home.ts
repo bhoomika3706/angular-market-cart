@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../services/product.service';
@@ -27,12 +27,14 @@ export class HomeComponent implements OnInit {
   loading = true;
   errorMessage = '';
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private changeDetector: ChangeDetectorRef
+  ) {}
 
   async ngOnInit(): Promise<void> {
     try {
       this.products = await this.productService.loadProducts();
-      this.filteredProducts = [...this.products];
 
       this.categories = [
         ...new Set(this.products.map(product => product.category || ''))
@@ -42,6 +44,8 @@ export class HomeComponent implements OnInit {
         ...new Set(this.products.map(product => product.color || ''))
       ].filter(color => color !== '');
 
+      this.applyFilters();
+
       console.log('Products loaded:', this.products);
       console.log('Filtered products:', this.filteredProducts);
     } catch (error) {
@@ -49,25 +53,24 @@ export class HomeComponent implements OnInit {
       this.errorMessage = 'Products could not be loaded.';
     } finally {
       this.loading = false;
+      this.changeDetector.detectChanges();
     }
   }
 
   applyFilters(): void {
     this.filteredProducts = this.products.filter(product => {
-      const productName = product.name || '';
-      const productCategory = product.category || '';
-      const productColor = product.color || '';
+      const name = product.name || '';
+      const category = product.category || '';
+      const color = product.color || '';
 
       const matchesSearch =
-        productName.toLowerCase().includes(this.searchText.toLowerCase());
+        name.toLowerCase().includes(this.searchText.toLowerCase());
 
       const matchesCategory =
-        this.selectedCategory === '' ||
-        productCategory === this.selectedCategory;
+        this.selectedCategory === '' || category === this.selectedCategory;
 
       const matchesColor =
-        this.selectedColor === '' ||
-        productColor === this.selectedColor;
+        this.selectedColor === '' || color === this.selectedColor;
 
       let matchesPrice = true;
 
@@ -88,6 +91,6 @@ export class HomeComponent implements OnInit {
       this.filteredProducts.sort((a, b) => b.price - a.price);
     }
 
-    console.log('After filter:', this.filteredProducts);
+    this.changeDetector.detectChanges();
   }
 }
