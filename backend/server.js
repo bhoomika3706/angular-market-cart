@@ -8,36 +8,41 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('MarketCart Backend is running');
-});
-
 app.get('/products', (req, res) => {
-  db.all('SELECT * FROM products', [], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ message: 'Failed to fetch products' });
+  db.all('SELECT * FROM products', [], (error, rows) => {
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
     }
 
     const products = rows.map(product => ({
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      category: product.category,
-      image: product.image,
-      description: product.description,
-      color: product.color,
-      sizes: product.sizes.split(','),
-      stock: product.stock,
-      rating: {
-        rate: product.rating,
-        count: product.ratingCount
-      }
+      ...product,
+      sizes: product.sizes ? product.sizes.split(',') : []
     }));
 
     res.json(products);
   });
 });
 
+app.get('/products/:id', (req, res) => {
+  const id = req.params.id;
+
+  db.get('SELECT * FROM products WHERE id = ?', [id], (error, product) => {
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    if (!product) {
+      res.status(404).json({ message: 'Product not found' });
+      return;
+    }
+
+    product.sizes = product.sizes ? product.sizes.split(',') : [];
+    res.json(product);
+  });
+});
+
 app.listen(PORT, () => {
-  console.log(`MarketCart backend running at http://localhost:${PORT}`);
+  console.log(`Backend running at http://localhost:${PORT}`);
 });
