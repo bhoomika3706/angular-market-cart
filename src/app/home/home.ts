@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DbService, CartItem } from '../services/db.service';
 import { ProductService } from '../services/product.service';
-import { CartItem } from '../services/db.service';
 
 @Component({
   selector: 'app-home',
@@ -12,85 +12,170 @@ import { CartItem } from '../services/db.service';
   styleUrls: ['./home.css']
 })
 export class HomeComponent implements OnInit {
-  products: CartItem[] = [];
-  filteredProducts: CartItem[] = [];
+  private dbService = inject(DbService);
+  private productService = inject(ProductService);
+  private changeDetector = inject(ChangeDetectorRef);
 
+  items: CartItem[] = [];
   searchText = '';
-  selectedCategory = '';
-  selectedColor = '';
-  selectedPrice = '';
-  selectedSort = '';
+  selectedCategory = 'All Categories';
+  selectedColor = 'All Colors';
+  selectedPrice = 'All Prices';
+  selectedSort = 'Sort By';
 
-  categories: string[] = [];
-  colors: string[] = [];
-
+  darkMode = false;
   loading = true;
-  errorMessage = '';
+  selectedItem: CartItem | null = null;
+  addedMessage = '';
 
-  constructor(
-    private productService: ProductService,
-    private changeDetector: ChangeDetectorRef
-  ) {}
+  priceRanges: string[] = [
+    'All Prices',
+    'Under ₹500',
+    '₹500 - ₹1500',
+    'Above ₹1500'
+  ];
+
+  sortOptions: string[] = [
+    'Sort By',
+    'Price Low to High',
+    'Price High to Low',
+    'Rating High to Low',
+    'Name A to Z'
+  ];
 
   async ngOnInit(): Promise<void> {
     try {
-      this.products = await this.productService.loadProducts();
-
-      this.categories = [
-        ...new Set(this.products.map(product => product.category || ''))
-      ].filter(category => category !== '');
-
-      this.colors = [
-        ...new Set(this.products.map(product => product.color || ''))
-      ].filter(color => color !== '');
-
-      this.applyFilters();
-
-      console.log('Products loaded:', this.products);
-      console.log('Filtered products:', this.filteredProducts);
+      this.items = await this.productService.loadProducts();
     } catch (error) {
-      console.error(error);
-      this.errorMessage = 'Products could not be loaded.';
+      console.error('Products could not be loaded:', error);
     } finally {
       this.loading = false;
       this.changeDetector.detectChanges();
     }
   }
 
-  applyFilters(): void {
-    this.filteredProducts = this.products.filter(product => {
-      const name = product.name || '';
-      const category = product.category || '';
-      const color = product.color || '';
+  get categories(): string[] {
+    const categoryList = this.items
+      .map(item => item.category)
+      .filter((category): category is string => !!category);
 
-      const matchesSearch =
-        name.toLowerCase().includes(this.searchText.toLowerCase());
+    return ['All Categories', ...new Set(categoryList)];
+  }
+
+  get colors(): string[] {
+    const colorList = this.items
+      .map(item => item.color)
+      .filter((color): color is string => !!color);
+
+    return ['All Colors', ...new Set(colorList)];
+  }
+
+  get cartCount(): number {
+    return this.items.reduce((total, item) => total + item.quantity, 0);
+  }
+
+  get filteredItems(): CartItem[] {
+    let result = this.items.filter(item => {
+      const matchesSearch = item.name
+        .toLowerCase()
+        .includes(this.searchText.toLowerCase());
 
       const matchesCategory =
-        this.selectedCategory === '' || category === this.selectedCategory;
+        this.selectedCategory === 'All Categories' ||
+        item.category === this.selectedCategory;
 
       const matchesColor =
-        this.selectedColor === '' || color === this.selectedColor;
+        this.selectedColor === 'All Colors' ||
+        item.color === this.selectedColor;
 
-      let matchesPrice = true;
-
-      if (this.selectedPrice === 'under500') {
-        matchesPrice = product.price < 500;
-      } else if (this.selectedPrice === '500to1000') {
-        matchesPrice = product.price >= 500 && product.price <= 1000;
-      } else if (this.selectedPrice === 'above1000') {
-        matchesPrice = product.price > 1000;
-      }
+      const matchesPrice =
+        this.selectedPrice === 'All Prices' ||
+        (this.selectedPrice === 'Under ₹500' && item.price < 500) ||
+        (this.selectedPrice === '₹500 - ₹1500' &&
+          item.price >= 500 &&
+          item.price <= 1500) ||
+        (this.selectedPrice === 'Above ₹1500' && item.price > 1500);
 
       return matchesSearch && matchesCategory && matchesColor && matchesPrice;
     });
 
-    if (this.selectedSort === 'lowToHigh') {
-      this.filteredProducts.sort((a, b) => a.price - b.price);
-    } else if (this.selectedSort === 'highToLow') {
-      this.filteredProducts.sort((a, b) => b.price - a.price);
+    if (this.selectedSort === 'Price Low to High') {
+      result = [...result].sort((a, b) => a.price - b.price);
     }
 
+    if (this.selectedSort === 'Price High to Low') {
+      result = [...result].sort((a, b) => b.price - a.price);
+    }
+
+    if (this.selectedSort === 'Rating High to Low') {
+      result = [...result].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    }
+
+    if (this.selectedSort === 'Name A to Z') {
+      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    return result;
+  }
+
+  formatCategory(category: string): string {
+    if (category === 'jewelery') return 'Jewelry';
+
+    return category
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  async addToCart(item: CartItem): Promise<void> {
+    item.quantity++;
+    await this.dbService.saveProducts(this.items);
+
+    this.addedMessage = `${item.name} added to cart`;
     this.changeDetector.detectChanges();
+
+    setTimeout(() => {
+      this.addedMessage = '';
+      this.changeDetector.detectChanges();
+    }, 1800);
+  }
+
+  async decreaseFromCart(item: CartItem): Promise<void> {
+    if (item.quantity > 0) {
+      item.quantity--;
+      await this.dbService.saveProducts(this.items);
+    }
+  }
+
+  async toggleFavorite(item: CartItem): Promise<void> {
+    item.isFavorite = !item.isFavorite;
+    await this.dbService.saveProducts(this.items);
+  }
+
+  openProductInfo(item: CartItem): void {
+    this.selectedItem = item;
+  }
+
+  closeProductInfo(): void {
+    this.selectedItem = null;
+  }
+
+  toggleTheme(): void {
+    this.darkMode = !this.darkMode;
+  }
+
+  onImageError(event: Event): void {
+    const imageElement = event.target as HTMLImageElement;
+    imageElement.src =
+      'data:image/svg+xml;utf8,' +
+      encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
+          <rect width="100%" height="100%" fill="#f1f5f9"/>
+          <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
+            font-family="Arial" font-size="22" fill="#64748b">
+            Product Image
+          </text>
+        </svg>
+      `);
   }
 }
