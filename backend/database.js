@@ -1,20 +1,22 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
+// path.join(__dirname, ...) always resolves relative to THIS file's folder,
+// no matter which folder you ran "node server.js" from.
 const dbPath = path.join(__dirname, 'marketcart.db');
 
 const db = new sqlite3.Database(dbPath, (error) => {
   if (error) {
     console.error('Database connection failed:', error.message);
   } else {
-    console.log('Connected to MarketCart database');
+    console.log('Connected to MarketCart database at', dbPath);
   }
 });
 
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS products (
-      id INTEGER PRIMARY KEY,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       price INTEGER NOT NULL,
       category TEXT,

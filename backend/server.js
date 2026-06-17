@@ -8,57 +8,46 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+// Handy sanity check: open http://localhost:3000 in a browser tab.
+// If this doesn't load, the backend isn't running — that's step 1 of debugging.
 app.get('/', (req, res) => {
-  res.send('MarketCart Backend is running');
+  res.send('MarketCart Backend is running ✅');
 });
 
 app.get('/products', (req, res) => {
-  db.all('SELECT * FROM products ORDER BY id ASC', [], (error, rows) => {
+  db.all('SELECT * FROM products', [], (error, rows) => {
     if (error) {
-      return res.status(500).json({ error: error.message });
+      console.error('GET /products failed:', error.message);
+      res.status(500).json({ error: error.message });
+      return;
     }
 
     const products = rows.map(product => ({
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      category: product.category,
-      image: product.image,
-      description: product.description,
-      rating: product.rating,
-      color: product.color,
-      sizes: product.sizes ? product.sizes.split(',') : [],
-      stock: product.stock
+      ...product,
+      sizes: product.sizes ? product.sizes.split(',') : []
     }));
 
+    console.log(`Sent ${products.length} products`);
     res.json(products);
   });
 });
 
 app.get('/products/:id', (req, res) => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
 
   db.get('SELECT * FROM products WHERE id = ?', [id], (error, product) => {
     if (error) {
-      return res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
+      return;
     }
 
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: 'Product not found' });
+      return;
     }
 
-    res.json({
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      category: product.category,
-      image: product.image,
-      description: product.description,
-      rating: product.rating,
-      color: product.color,
-      sizes: product.sizes ? product.sizes.split(',') : [],
-      stock: product.stock
-    });
+    product.sizes = product.sizes ? product.sizes.split(',') : [];
+    res.json(product);
   });
 });
 
