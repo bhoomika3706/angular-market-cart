@@ -390,3 +390,40 @@
   background: white;
   color: #0f172a;
 }
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  background: #f8fafc;
+  padding: 20px 0 28px;
+  transition: all 0.3s ease;
+}
+
+.sticky-header.scrolled {
+  padding: 10px 0 14px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.sticky-header.scrolled .brand h1 {
+  font-size: 34px;
+}
+
+.sticky-header.scrolled .cart-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.sticky-header.scrolled .theme-btn,
+.sticky-header.scrolled .favorite-page-btn {
+  width: 46px;
+  height: 46px;
+  font-size: 20px;
+}
+
+.sticky-header.scrolled .home-buttons {
+  margin-bottom: 0;
+}
+
+.home-container.dark-mode .sticky-header {
+  background: #0f172a;
+}

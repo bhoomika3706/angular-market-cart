@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +16,12 @@ export class HomeComponent implements OnInit {
   private dbService = inject(DbService);
   private productService = inject(ProductService);
   private changeDetector = inject(ChangeDetectorRef);
+  isScrolled = false;
+
+@HostListener('window:scroll', [])
+onWindowScroll(): void {
+  this.isScrolled = window.scrollY > 80;
+}
 
   items: CartItem[] = [];
   searchText = '';
