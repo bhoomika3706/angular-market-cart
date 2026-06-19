@@ -16,17 +16,17 @@
 
     <div>
       <p>Subtotal</p>
-      <h2>₹{{ subtotal }}</h2>
+      <h2>₹{{ subtotal | number }}</h2>
     </div>
 
     <div>
       <p>Tax</p>
-      <h2>₹{{ tax }}</h2>
+      <h2>₹{{ tax | number}}</h2>
     </div>
 
     <div>
       <p>Total</p>
-      <h2>₹{{ total }}</h2>
+      <h2>₹{{ total | number}}</h2>
     </div>
 
     <button class="clear-btn" (click)="clearCart()">Clear Cart</button>
@@ -52,7 +52,7 @@
 
           <div class="cart-details">
             <h3>{{ item.name }}</h3>
-            <p>₹{{ item.price }}</p>
+            <p>₹{{ item.price | number }}</p>
           </div>
 
           <div class="quantity-controls">

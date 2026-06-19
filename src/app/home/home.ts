@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DbService, CartItem } from '../services/db.service';
 import { ProductService } from '../services/product.service';
@@ -7,7 +8,7 @@ import { ProductService } from '../services/product.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, DecimalPipe],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
