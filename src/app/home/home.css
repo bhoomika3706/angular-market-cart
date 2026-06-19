@@ -368,4 +368,25 @@
 
 .home-container.dark-mode .rating {
   color: #facc15;
+}.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.favorite-page-btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #0f172a;
+  color: white;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  font-size: 26px;
+}
+
+.home-container.dark-mode .favorite-page-btn {
+  background: white;
+  color: #0f172a;
 }

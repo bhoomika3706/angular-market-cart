@@ -16,9 +16,13 @@
       <h1>MarketCart</h1>
     </div>
 
-    <button class="theme-btn" (click)="toggleTheme()">
-      {{ darkMode ? '☀️' : '🌙' }}
-    </button>
+   <div class="top-actions">
+  <a routerLink="/favorites" class="favorite-page-btn">♥</a>
+
+  <button class="theme-btn" (click)="toggleTheme()">
+    {{ darkMode ? '☀️' : '🌙' }}
+  </button>
+</div>
   </div>
 
   <div class="home-buttons">

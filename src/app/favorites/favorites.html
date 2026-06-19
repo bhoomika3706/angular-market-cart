@@ -1,0 +1,63 @@
+<div class="favorites-page">
+  <div class="top-bar">
+    <div class="brand">
+      <h1>♥ Favorites</h1>
+    </div>
+
+    <div class="nav-buttons">
+      <a routerLink="/">Home</a>
+      <a routerLink="/cart">Cart</a>
+    </div>
+  </div>
+
+  @if (loading) {
+    <h2 class="message">Loading favorites...</h2>
+  }
+
+  @if (!loading && favoriteItems.length === 0) {
+    <div class="empty-state">
+      <h2>No favorite products yet ♡</h2>
+      <p>Go back to home and tap the heart icon on products you like.</p>
+    </div>
+  }
+
+  @if (!loading && favoriteItems.length > 0) {
+    <div class="product-grid">
+      @for (item of favoriteItems; track item.id) {
+        <div class="product-card">
+          <button class="favorite-btn" (click)="toggleFavorite(item)">
+            {{ item.isFavorite ? '♥' : '♡' }}
+          </button>
+
+          <img [src]="item.image" alt="product image" />
+
+          <h3>{{ item.name }}</h3>
+
+          <p class="rating">⭐ {{ item.rating || 0 }} / 5</p>
+
+          <p class="category">
+            {{ formatCategory(item.category || '') }}
+          </p>
+
+          <p class="price">₹{{ item.price | number }}</p>
+
+          <div class="card-actions">
+            @if (item.quantity === 0) {
+              <button class="cart-btn" (click)="addToCart(item)">
+                Add to Cart
+              </button>
+            }
+
+            @if (item.quantity > 0) {
+              <div class="quantity-selector">
+                <button (click)="decreaseFromCart(item)">-</button>
+                <span>{{ item.quantity }}</span>
+                <button (click)="addToCart(item)">+</button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
