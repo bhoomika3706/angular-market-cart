@@ -113,7 +113,7 @@
             {{ formatCategory(item.category || '') }}
           </p>
 
-          <p class="price">₹{{ item.price | number }}</p>
+          <p class="price">{{ item.price | currency:'INR':'symbol':'1.0-0':'en-IN' }}</p>
 
           <div class="card-actions">
             <button class="info-btn" (click)="openProductInfo(item)">
@@ -164,7 +164,7 @@
           <p><strong>Color:</strong> {{ selectedItem.color }}</p>
         </div>
 
-        <p class="popup-price">₹{{ selectedItem.price | number}}</p>
+        <p class="popup-price">₹{{ selectedItem.price | currency:'INR':'symbol':'1.0-0':'en-IN' }}</p>
 
         <button class="cart-btn" (click)="addToCart(selectedItem)">
           Add to Cart

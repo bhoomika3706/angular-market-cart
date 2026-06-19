@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { DbService, CartItem } from '../services/db.service';
 import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, CurrencyPipe],
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']
 })
