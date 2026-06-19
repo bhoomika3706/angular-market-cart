@@ -1,10 +1,4 @@
 <div class="home-container" [class.dark-mode]="darkMode">
-  @if (addedMessage) {
-    <div class="toast-message">
-      ✓ {{ addedMessage }}
-    </div>
-  }
-
   <div class="sticky-header" [class.scrolled]="isScrolled">
     <div class="top-bar">
       <div class="brand">
@@ -177,6 +171,12 @@
           Add to Cart
         </button>
       </div>
+    </div>
+  }
+
+  @if (addedMessage) {
+    <div class="toast-message">
+      ✓ {{ addedMessage }}
     </div>
   }
 </div>

@@ -272,15 +272,20 @@
 /* Toast */
 .toast-message {
   position: fixed;
-  top: 25px;
-  right: 25px;
+  right: 28px;
+  bottom: 28px;
+  top: auto;
+  left: auto;
   background: #4de685;
   color: white;
   padding: 14px 22px;
   border-radius: 14px;
-  z-index: 10000;
+  z-index: 20000;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+  pointer-events: none;
 }
-
 /* Empty State */
 .empty-state {
   background: white;

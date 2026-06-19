@@ -165,18 +165,17 @@ onWindowScroll(): void {
   }
 
   async addToCart(item: CartItem): Promise<void> {
-    item.quantity++;
-    await this.dbService.saveProducts(this.items);
+  item.quantity++;
+  await this.dbService.saveProducts(this.items);
 
-    this.addedMessage = `${item.name} added to cart`;
+  this.addedMessage = 'Added to cart';
+  this.changeDetector.detectChanges();
+
+  setTimeout(() => {
+    this.addedMessage = '';
     this.changeDetector.detectChanges();
-
-    setTimeout(() => {
-      this.addedMessage = '';
-      this.changeDetector.detectChanges();
-    }, 1800);
-  }
-
+  }, 1800);
+}
   async decreaseFromCart(item: CartItem): Promise<void> {
     if (item.quantity > 0) {
       item.quantity--;
