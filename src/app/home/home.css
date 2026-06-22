@@ -109,12 +109,19 @@
   position: relative;
   padding: 10px 18px;
   border: 1px solid var(--page-border);
+  text-decoration: none !important;
   border-radius: 11px;
   background: var(--card-bg);
   color: var(--page-muted);
   font-size: 13px;
   font-weight: 650;
   transition: 0.2s ease;
+}
+.home-buttons a:hover,
+.home-buttons a:visited,
+.home-buttons a:focus,
+.home-buttons a:active {
+  text-decoration: none !important;
 }
 
 .home-buttons a:hover {
@@ -601,4 +608,76 @@
   .product-card {
     min-height: 440px;
   }
+}
+.home-buttons a {
+  position: relative;
+  text-decoration: none !important;
+  background: #10b981;
+  color: white;
+  padding: 13px 30px;
+  border-radius: 999px;
+  font-size: 17px;
+  transition: all 0.25s ease;
+}
+
+.home-buttons a:hover,
+.home-buttons a:visited,
+.home-buttons a:focus,
+.home-buttons a:active {
+  text-decoration: none !important;
+}
+
+.filters input:focus,
+.filters select:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+}
+
+.category {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  margin: 0 0 18px;
+  font-weight: 600;
+}
+
+.info-btn {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  flex: 1;
+}
+
+.cart-btn {
+  background: #10b981;
+  color: white;
+  flex: 2;
+}
+
+.theme-btn,
+.favorite-page-btn {
+  background: #111827;
+  color: white;
+}
+
+.home-container.dark-mode .theme-btn,
+.home-container.dark-mode .favorite-page-btn,
+.home-container.dark-mode .home-buttons a,
+.home-container.dark-mode .cart-btn {
+  background: #10b981;
+  color: white;
+}
+
+.home-container.dark-mode .category,
+.home-container.dark-mode .info-btn,
+.home-container.dark-mode .popup-extra-info {
+  background: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+}
+.home-container.dark-mode {
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.16), transparent 32%),
+    linear-gradient(135deg, #020617, #0f172a);
+  color: #f8fafc;
 }
