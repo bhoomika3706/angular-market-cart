@@ -100,19 +100,37 @@
 .back-btn {
   display: inline-flex;
   align-items: center;
-  margin: 14px 5px 2px;
-  padding: 11px 16px;
-  background: #2563eb;
+  justify-content: center;
+  margin: 8px;
+  padding: 11px 20px;
+
+  background: #10b981;
   color: white;
-  border-radius: 11px;
-  font-size: 13px;
-  font-weight: 700;
-  transition: 0.2s ease;
+
+  border: none;
+  border-radius: 12px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .back-btn:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
+  background: #059669;
+  color: white;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.back-btn:focus,
+.back-btn:active,
+.back-btn:visited {
+  color: white;
+  text-decoration: none;
 }
 
 @media (max-width: 600px) {
