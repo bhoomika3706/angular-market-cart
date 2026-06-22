@@ -1,9 +1,11 @@
 .favorites-page {
   min-height: 100vh;
-  padding: 32px;
-  background: #f8fafc;
+  padding: 34px;
+  background:
+    radial-gradient(circle at top left, rgba(236, 72, 153, 0.12), transparent 30%),
+    linear-gradient(135deg, #f8fafc, #fff1f2);
   color: #0f172a;
-  font-family: Arial, sans-serif;
+  font-family: Inter, Arial, sans-serif;
   overflow-x: hidden;
 }
 
@@ -17,6 +19,7 @@
 .brand h1 {
   font-size: 48px;
   margin: 0;
+  letter-spacing: -0.8px;
 }
 
 .nav-buttons {
@@ -29,8 +32,14 @@
   background: #0f172a;
   color: white;
   padding: 14px 30px;
-  border-radius: 24px;
+  border-radius: 999px;
   font-size: 18px;
+  transition: all 0.25s ease;
+}
+
+.nav-buttons a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
 }
 
 .product-grid {
@@ -45,16 +54,22 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  background: white;
-  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 28px;
   padding: 26px;
   min-height: 500px;
   text-align: center;
-  border: 1px solid #e5eaf2;
-  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: all 0.25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.13);
 }
 
 .product-card img {
@@ -67,38 +82,39 @@
 
 .favorite-btn {
   position: absolute;
-  top: 22px;
-  right: 22px;
-  width: 48px;
-  height: 48px;
+  top: 20px;
+  right: 20px;
+  width: 46px;
+  height: 46px;
   border: none;
   border-radius: 50%;
-  background: #f8fafc;
+  background: #fff1f2;
   color: #ef4444;
-  font-size: 26px;
+  font-size: 25px;
   cursor: pointer;
 }
 
 .product-card h3 {
   font-size: 20px;
-  line-height: 1.3;
-  margin: 0 0 16px;
+  line-height: 1.35;
+  margin: 0 0 14px;
   color: #020617;
 }
 
 .rating {
-  font-size: 17px;
+  font-size: 16px;
   margin: 0 0 14px;
-  color: #92400e;
+  color: #b45309;
 }
 
 .category {
-  background: #f1f5f9;
-  color: #334155;
+  background: #fff1f2;
+  color: #be123c;
   padding: 8px 18px;
-  border-radius: 20px;
-  font-size: 15px;
+  border-radius: 999px;
+  font-size: 14px;
   margin: 0 0 18px;
+  font-weight: 600;
 }
 
 .price {
@@ -150,9 +166,9 @@
 .empty-state {
   background: white;
   padding: 60px;
-  border-radius: 24px;
+  border-radius: 28px;
   text-align: center;
-  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
 }
 
 .message {
@@ -169,6 +185,11 @@
 @media (max-width: 850px) {
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .top-bar {
+    flex-direction: column;
+    gap: 20px;
   }
 }
 
