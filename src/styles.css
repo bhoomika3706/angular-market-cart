@@ -198,7 +198,8 @@ html.dark-mode .profile-hero .profile-name {
 }
 
 html.dark-mode .profile-hero p,
-html.dark-mode .profile-hero span {
+html.dark-mode .profile-hero span,
+html.dark-mode .profile-hero .profile-label {
   color: #2563eb !important;
 }
 
@@ -212,3 +213,4 @@ html.dark-mode .profile-card strong {
 html.dark-mode .profile-card p {
   color: #cbd5e1 !important;
 }
+

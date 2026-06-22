@@ -152,41 +152,65 @@
     grid-column: auto;
   }
 }
-body.dark-mode .profile-page {
+/* ========================= */
+/* PROFILE DARK MODE */
+/* ========================= */
+
+:host-context(.dark-mode) .profile-page {
   background:
     radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), transparent 28rem),
     #070b14;
   color: #f1f5f9;
 }
 
-body.dark-mode .profile-card,
-body.dark-mode .profile-hero,
-body.dark-mode .info-box {
+:host-context(.dark-mode) .profile-card {
   background: #101827;
-  border-color: #26334a;
+  border: 1px solid #26334a;
   color: #f1f5f9;
 }
 
-body.dark-mode .profile-hero {
+:host-context(.dark-mode) .profile-header {
   background:
-    linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(15, 23, 42, 0.95));
+    linear-gradient(
+      135deg,
+      rgba(16, 185, 129, 0.18),
+      rgba(15, 23, 42, 0.95)
+    );
+  border: 1px solid #26334a;
 }
 
-body.dark-mode .info-box p,
-body.dark-mode .info-label {
+:host-context(.dark-mode) .small-title {
+  color: #34d399;
+}
+
+:host-context(.dark-mode) .profile-header h1 {
+  color: #ffffff;
+}
+
+:host-context(.dark-mode) .info-box {
+  background: #111c2f;
+  border: 1px solid #26334a;
+}
+
+:host-context(.dark-mode) .info-box span {
+  color: #94a3b8;
+}
+
+:host-context(.dark-mode) .info-box h3 {
+  color: #ffffff;
+}
+
+:host-context(.dark-mode) .info-box p {
   color: #cbd5e1;
 }
 
-body.dark-mode .back-btn {
+:host-context(.dark-mode) .back-btn {
   background: #10b981;
   color: white;
   text-decoration: none !important;
 }
 
-body.dark-mode .back-btn:hover,
-body.dark-mode .back-btn:focus,
-body.dark-mode .back-btn:active,
-body.dark-mode .back-btn:visited {
+:host-context(.dark-mode) .back-btn:hover {
   background: #059669;
   color: white;
   text-decoration: none !important;
