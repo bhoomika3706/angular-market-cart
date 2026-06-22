@@ -190,3 +190,25 @@ html.dark-mode .back-btn:visited {
   color: white !important;
   text-decoration: none !important;
 }
+html.dark-mode .profile-hero h1,
+html.dark-mode .profile-hero h2,
+html.dark-mode .profile-hero h3,
+html.dark-mode .profile-hero .profile-name {
+  color: #0f172a !important;
+}
+
+html.dark-mode .profile-hero p,
+html.dark-mode .profile-hero span {
+  color: #2563eb !important;
+}
+
+html.dark-mode .profile-card h1,
+html.dark-mode .profile-card h2,
+html.dark-mode .profile-card h3,
+html.dark-mode .profile-card strong {
+  color: #f8fafc !important;
+}
+
+html.dark-mode .profile-card p {
+  color: #cbd5e1 !important;
+}
