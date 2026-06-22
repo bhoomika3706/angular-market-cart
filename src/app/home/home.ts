@@ -46,24 +46,27 @@ onWindowScroll(): void {
   ];
 
   async ngOnInit(): Promise<void> {
-    try {
-      const backendProducts = await this.productService.loadProducts();
+  const savedTheme = localStorage.getItem('marketcart-theme');
+  this.darkMode = savedTheme === 'dark';
 
-      this.items = backendProducts.map(item => ({
-        ...item,
-        color: this.normalizeColor(item.color, item.name, item.category),
-        quantity: item.quantity || 0,
-        isFavorite: item.isFavorite || false
-      }));
+  try {
+    const backendProducts = await this.productService.loadProducts();
 
-      await this.dbService.saveProducts(this.items);
-    } catch (error) {
-      console.error('Products could not be loaded:', error);
-    } finally {
-      this.loading = false;
-      this.changeDetector.detectChanges();
-    }
+    this.items = backendProducts.map(item => ({
+      ...item,
+      color: this.normalizeColor(item.color, item.name, item.category),
+      quantity: item.quantity || 0,
+      isFavorite: item.isFavorite || false
+    }));
+
+    await this.dbService.saveProducts(this.items);
+  } catch (error) {
+    console.error('Products could not be loaded:', error);
+  } finally {
+    this.loading = false;
+    this.changeDetector.detectChanges();
   }
+}
 
   get categories(): string[] {
     const categoryList = this.items
@@ -197,8 +200,13 @@ onWindowScroll(): void {
   }
 
   toggleTheme(): void {
-    this.darkMode = !this.darkMode;
-  }
+  this.darkMode = !this.darkMode;
+
+  localStorage.setItem(
+    'marketcart-theme',
+    this.darkMode ? 'dark' : 'light'
+  );
+}
 
   onImageError(event: Event): void {
     const imageElement = event.target as HTMLImageElement;
