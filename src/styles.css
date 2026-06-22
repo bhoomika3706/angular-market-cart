@@ -49,3 +49,144 @@ select:focus-visible {
   outline: 3px solid rgba(37, 99, 235, 0.22);
   outline-offset: 3px;
 }
+html.dark-mode body {
+  background: #070b14;
+}
+
+/* CART DARK MODE */
+html.dark-mode .cart-page {
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), transparent 28rem),
+    #070b14 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark-mode .summary-card,
+html.dark-mode .cart-item,
+html.dark-mode .message {
+  background: #101827 !important;
+  border-color: #26334a !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark-mode .summary-card p,
+html.dark-mode .cart-details h3,
+html.dark-mode .message {
+  color: #cbd5e1 !important;
+}
+
+html.dark-mode .cart-details p {
+  color: #34d399 !important;
+}
+
+html.dark-mode .small-btn {
+  background: #101827 !important;
+  color: #f1f5f9 !important;
+  border-color: #26334a !important;
+  text-decoration: none !important;
+}
+
+html.dark-mode .small-btn:hover {
+  color: #34d399 !important;
+  border-color: #10b981 !important;
+}
+
+html.dark-mode .quantity-controls {
+  background: rgba(16, 185, 129, 0.16) !important;
+}
+
+html.dark-mode .quantity-controls button {
+  background: #172033 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark-mode .quantity-controls button:hover {
+  background: #10b981 !important;
+  color: white !important;
+}
+
+/* FAVORITES DARK MODE */
+html.dark-mode .favorites-page {
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), transparent 28rem),
+    #070b14 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark-mode .favorites-page .product-card,
+html.dark-mode .favorites-page .empty-state {
+  background: #101827 !important;
+  border-color: #26334a !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark-mode .favorites-page .product-card h3,
+html.dark-mode .favorites-page .price {
+  color: #f1f5f9 !important;
+}
+
+html.dark-mode .favorites-page .category {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #34d399 !important;
+}
+
+html.dark-mode .favorites-page .nav-buttons a {
+  background: #101827 !important;
+  color: #f1f5f9 !important;
+  border-color: #26334a !important;
+  text-decoration: none !important;
+}
+
+html.dark-mode .favorites-page .nav-buttons a:hover {
+  color: #34d399 !important;
+  border-color: #10b981 !important;
+}
+
+html.dark-mode .favorites-page .product-card img {
+  mix-blend-mode: normal !important;
+}
+
+html.dark-mode .favorites-page .favorite-btn {
+  background: #172033 !important;
+}
+
+/* PROFILE DARK MODE */
+html.dark-mode .profile-page {
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), transparent 28rem),
+    #070b14 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark-mode .profile-card,
+html.dark-mode .profile-hero,
+html.dark-mode .info-box {
+  background: #101827 !important;
+  border-color: #26334a !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark-mode .profile-hero {
+  background:
+    linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(15, 23, 42, 0.95)) !important;
+}
+
+html.dark-mode .info-box p,
+html.dark-mode .info-label {
+  color: #cbd5e1 !important;
+}
+
+html.dark-mode .back-btn {
+  background: #10b981 !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+html.dark-mode .back-btn:hover,
+html.dark-mode .back-btn:focus,
+html.dark-mode .back-btn:active,
+html.dark-mode .back-btn:visited {
+  background: #059669 !important;
+  color: white !important;
+  text-decoration: none !important;
+}

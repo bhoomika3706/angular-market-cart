@@ -232,3 +232,53 @@
     gap: 18px;
   }
 }
+body.dark-mode .cart-page {
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), transparent 28rem),
+    #070b14;
+  color: #f1f5f9;
+}
+
+body.dark-mode .summary-card,
+body.dark-mode .cart-item,
+body.dark-mode .message {
+  background: #101827;
+  border-color: #26334a;
+  color: #f1f5f9;
+}
+
+body.dark-mode .summary-card p,
+body.dark-mode .cart-details h3,
+body.dark-mode .message {
+  color: #cbd5e1;
+}
+
+body.dark-mode .cart-details p {
+  color: #34d399;
+}
+
+body.dark-mode .small-btn {
+  background: #101827;
+  color: #f1f5f9;
+  border-color: #26334a;
+  text-decoration: none !important;
+}
+
+body.dark-mode .small-btn:hover {
+  color: #34d399;
+  border-color: #10b981;
+}
+
+body.dark-mode .quantity-controls {
+  background: rgba(16, 185, 129, 0.16);
+}
+
+body.dark-mode .quantity-controls button {
+  background: #172033;
+  color: #f1f5f9;
+}
+
+body.dark-mode .quantity-controls button:hover {
+  background: #10b981;
+  color: white;
+}

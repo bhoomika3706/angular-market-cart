@@ -48,6 +48,7 @@ onWindowScroll(): void {
   async ngOnInit(): Promise<void> {
   const savedTheme = localStorage.getItem('marketcart-theme');
   this.darkMode = savedTheme === 'dark';
+  document.documentElement.classList.toggle('dark-mode', this.darkMode);
 
   try {
     const backendProducts = await this.productService.loadProducts();
@@ -199,15 +200,16 @@ onWindowScroll(): void {
     this.selectedItem = null;
   }
 
-  toggleTheme(): void {
+ toggleTheme(): void {
   this.darkMode = !this.darkMode;
 
   localStorage.setItem(
     'marketcart-theme',
     this.darkMode ? 'dark' : 'light'
   );
-}
 
+  document.documentElement.classList.toggle('dark-mode', this.darkMode);
+}
   onImageError(event: Event): void {
     const imageElement = event.target as HTMLImageElement;
     imageElement.src =
