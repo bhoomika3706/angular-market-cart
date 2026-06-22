@@ -129,11 +129,9 @@
   height: 105px;
   padding: 13px;
   object-fit: contain;
-  background: #f0f4fa;
+  background: #f8fafc;
   border-radius: 13px;
-  mix-blend-mode: multiply;
 }
-
 .cart-details h3 {
   margin: 0 0 9px;
   font-size: 16px;
