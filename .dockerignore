@@ -3,3 +3,4 @@ node_modules
 .git
 .vscode
 dist
+backend/node_modules
