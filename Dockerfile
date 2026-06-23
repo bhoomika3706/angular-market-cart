@@ -3,11 +3,12 @@ FROM node:22
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
 
-EXPOSE 4200
+RUN npm run build
 
-CMD ["npm", "start", "--", "--host", "0.0.0.0"]
+EXPOSE 3000
+
+CMD ["node", "backend/server.js"]
