@@ -1,5 +1,10 @@
 # Angular Market Cart
 
+## Live Demo
+🔗 https://marketcart.onrender.com
+
+> Note: hosted on Render's free tier — the app may take 30–60 seconds to load on first visit if it has been inactive, as the server spins down after periods of no traffic.
+
 Angular Market Cart is a full-stack e-commerce application built using Angular, TypeScript, Express.js, SQLite, and IndexedDB. The application fetches product data from a custom Express backend API connected to a SQLite database and stores the data in IndexedDB for faster access and improved performance. It allows users to browse products, search items, filter by category, color, and price range, sort products by multiple criteria, view detailed product information, add products to a cart, manage item quantities, and maintain cart data even after refreshing the page. The application also includes a favorites/wishlist system, dedicated favorites page, responsive design, loading skeletons, empty state handling, dark mode with theme persistence, and a modern shopping experience.
 
 The frontend is built using Angular, TypeScript, HTML, and CSS, while the backend is developed using Node.js, Express.js, SQLite, and Nodemon. Product information is stored in a SQLite database and served through custom REST API endpoints. The Angular frontend communicates with the backend through ProductService, retrieves product data, stores it in IndexedDB, and updates the UI efficiently. Cart quantities and favorite selections are preserved through local storage mechanisms, ensuring a smooth user experience across sessions.
