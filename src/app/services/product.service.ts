@@ -7,7 +7,7 @@ import { DbService, CartItem } from './db.service';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:3000/products';
+  private apiUrl = '/products';
 
   constructor(
     private http: HttpClient,
