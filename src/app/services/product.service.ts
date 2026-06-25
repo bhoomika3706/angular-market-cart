@@ -7,7 +7,7 @@ import { DbService, CartItem } from './db.service';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = '/products';
+  private apiUrl = 'https://marketcart.onrender.com/products';
 
   constructor(
     private http: HttpClient,
