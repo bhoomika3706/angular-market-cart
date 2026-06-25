@@ -16,14 +16,16 @@ export class HomeComponent implements OnInit {
   private dbService = inject(DbService);
   private productService = inject(ProductService);
   private changeDetector = inject(ChangeDetectorRef);
+
   isScrolled = false;
 
-@HostListener('window:scroll', [])
-onWindowScroll(): void {
-  this.isScrolled = window.scrollY > 80;
-}
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    this.isScrolled = window.scrollY > 80;
+  }
 
   items: CartItem[] = [];
+
   searchText = '';
   selectedCategory = 'All Categories';
   selectedColor = 'All Colors';
@@ -46,28 +48,35 @@ onWindowScroll(): void {
   ];
 
   async ngOnInit(): Promise<void> {
-  const savedTheme = localStorage.getItem('marketcart-theme');
-  this.darkMode = savedTheme === 'dark';
-  document.documentElement.classList.toggle('dark-mode', this.darkMode);
+    const savedTheme = localStorage.getItem('marketcart-theme');
+    this.darkMode = savedTheme === 'dark';
+    document.documentElement.classList.toggle('dark-mode', this.darkMode);
 
-  try {
-    const backendProducts = await this.productService.loadProducts();
+    try {
+      await this.dbService.initDB();
 
-    this.items = backendProducts.map(item => ({
-      ...item,
-      color: this.normalizeColor(item.color, item.name, item.category),
-      quantity: item.quantity || 0,
-      isFavorite: item.isFavorite || false
-    }));
+      const savedProducts = await this.dbService.getProducts();
+      const backendProducts = await this.productService.loadProducts();
 
-    await this.dbService.saveProducts(this.items);
-  } catch (error) {
-    console.error('Products could not be loaded:', error);
-  } finally {
-    this.loading = false;
-    this.changeDetector.detectChanges();
+      this.items = backendProducts.map(item => {
+        const savedItem = savedProducts.find(savedProduct => savedProduct.id === item.id);
+
+        return {
+          ...item,
+          color: this.normalizeColor(item.color, item.name, item.category),
+          quantity: savedItem ? savedItem.quantity : 0,
+          isFavorite: savedItem ? savedItem.isFavorite : false
+        };
+      });
+
+      await this.dbService.saveProducts(this.items);
+    } catch (error) {
+      console.error('Products could not be loaded:', error);
+    } finally {
+      this.loading = false;
+      this.changeDetector.detectChanges();
+    }
   }
-}
 
   get categories(): string[] {
     const categoryList = this.items
@@ -169,17 +178,18 @@ onWindowScroll(): void {
   }
 
   async addToCart(item: CartItem): Promise<void> {
-  item.quantity++;
-  await this.dbService.saveProducts(this.items);
+    item.quantity++;
+    await this.dbService.saveProducts(this.items);
 
-  this.addedMessage = 'Added to cart';
-  this.changeDetector.detectChanges();
-
-  setTimeout(() => {
-    this.addedMessage = '';
+    this.addedMessage = 'Added to cart';
     this.changeDetector.detectChanges();
-  }, 1800);
-}
+
+    setTimeout(() => {
+      this.addedMessage = '';
+      this.changeDetector.detectChanges();
+    }, 1800);
+  }
+
   async decreaseFromCart(item: CartItem): Promise<void> {
     if (item.quantity > 0) {
       item.quantity--;
@@ -200,16 +210,17 @@ onWindowScroll(): void {
     this.selectedItem = null;
   }
 
- toggleTheme(): void {
-  this.darkMode = !this.darkMode;
+  toggleTheme(): void {
+    this.darkMode = !this.darkMode;
 
-  localStorage.setItem(
-    'marketcart-theme',
-    this.darkMode ? 'dark' : 'light'
-  );
+    localStorage.setItem(
+      'marketcart-theme',
+      this.darkMode ? 'dark' : 'light'
+    );
 
-  document.documentElement.classList.toggle('dark-mode', this.darkMode);
-}
+    document.documentElement.classList.toggle('dark-mode', this.darkMode);
+  }
+
   onImageError(event: Event): void {
     const imageElement = event.target as HTMLImageElement;
     imageElement.src =

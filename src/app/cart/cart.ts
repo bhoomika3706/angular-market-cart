@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { DbService, CartItem } from '../services/db.service';
-import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-cart',
@@ -22,17 +21,17 @@ export class CartComponent implements OnInit {
 
   constructor(
     private dbService: DbService,
-    private productService: ProductService,
     private changeDetector: ChangeDetectorRef
   ) {}
 
   async ngOnInit(): Promise<void> {
     try {
-      this.items = await this.productService.loadProducts();
+      await this.dbService.initDB();
+      this.items = await this.dbService.getProducts();
       this.recalculateTotals();
     } catch (error) {
       console.error(error);
-      this.errorMessage = 'Products could not be loaded.';
+      this.errorMessage = 'Cart could not be loaded.';
     } finally {
       this.loading = false;
       this.changeDetector.detectChanges();
@@ -57,8 +56,14 @@ export class CartComponent implements OnInit {
     }
   }
 
+  async removeItem(item: CartItem): Promise<void> {
+    item.quantity = 0;
+    this.recalculateTotals();
+    await this.dbService.saveProducts(this.items);
+  }
+
   async clearCart(): Promise<void> {
-    this.items.forEach(item => (item.quantity = 0));
+    this.items.forEach(item => item.quantity = 0);
     this.recalculateTotals();
     await this.dbService.saveProducts(this.items);
   }
@@ -67,7 +72,7 @@ export class CartComponent implements OnInit {
     this.subtotal = 0;
     this.cartCount = 0;
 
-    this.items.forEach(item => {
+    this.cartItems.forEach(item => {
       this.subtotal += item.price * item.quantity;
       this.cartCount += item.quantity;
     });
