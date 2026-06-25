@@ -14,4 +14,4 @@ RUN npm install --omit=dev
 COPY backend/ ./
 COPY --from=frontend-build /app/dist/market-cart/browser /app/dist/market-cart/browser
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD sh -c "npm run seed && node server.js"
