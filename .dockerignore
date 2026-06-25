@@ -1,6 +1,6 @@
 node_modules
+backend/node_modules
 .angular
 .git
 .vscode
 dist
-backend/node_modules
